@@ -53,6 +53,25 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2020-07-01' = {
         }
         name: 'ALLOW_APPGW'
       }
+      {
+        properties: {
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          sourceAddressPrefix: 'Internet'
+          destinationAddressPrefix: '*'
+          access: 'Allow'
+          priority: 510
+          direction: 'Inbound'
+          sourcePortRanges: []
+          destinationPortRanges: [
+            '80'
+            '443'
+          ]
+          sourceAddressPrefixes: []
+          destinationAddressPrefixes: []
+        }
+        name: 'ALLOW_HTTP_ACCESS'
+      }
     ]
   }
 }
