@@ -9,7 +9,7 @@
 
 Please build `azure-javaee-iaas` first.
 
-Then running the following command to generate ARM package and upload to marketplace center.
+Then run the following command to generate ARM package and upload to marketplace center.
 
 ```bash
 $ mvn -Pbicep -Ddev -Passembly clean install
