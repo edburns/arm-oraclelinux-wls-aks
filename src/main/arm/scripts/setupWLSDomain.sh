@@ -475,6 +475,12 @@ function setup_wls_domain() {
         javaOptions="-Dweblogic.security.SSL.ignoreHostnameVerification=true -Dweblogic.security.SSL.trustedCAKeyStore=${sharedPath}/${wlsTrustKeyStoreJKSFileName}"
     fi
 
+    # show resource for debugging
+    kubectl -n ${wlsOptNameSpace} get pod
+    kubectl -n ${wlsDomainNS} get secret
+    kubectl -n ${wlsDomainNS} get configmap
+    kubectl -n ${wlsDomainNS} get pvc
+
     # generate domain yaml
     customDomainYaml=${scriptDir}/custom-domain.yaml
     chmod ugo+x $scriptDir/genDomainConfig.sh
@@ -535,6 +541,7 @@ function wait_for_domain_completed() {
         kubectl -n ${wlsDomainNS} get pods
         kubectl -n ${wlsDomainNS} get svc
     else
+         kubectl -n ${wlsDomainNS} get events
         echo WARNING: WebLogic domain is not ready. It takes too long to create domain, please refer to http://oracle.github.io/weblogic-kubernetes-operator/samples/simple/azure-kubernetes-service/#troubleshooting
         exitCode=1
     fi
