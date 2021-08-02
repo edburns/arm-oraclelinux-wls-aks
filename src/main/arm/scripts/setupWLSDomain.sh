@@ -223,6 +223,7 @@ function install_wls_operator() {
         --set "enableClusterRoleBinding=true" \
         --set "domainNamespaceSelectionStrategy=LabelSelector" \
         --set "domainNamespaceLabelSelector=weblogic-operator\=enabled" \
+		--version 3.2.0 \
         --wait
 
     validate_status "Installing WLS operator."
