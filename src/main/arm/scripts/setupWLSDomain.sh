@@ -238,9 +238,39 @@ function install_wls_operator() {
 
 # Query ACR login server, username, password
 function query_acr_credentials() {
+    validate_status "debug: edburns: starting query_acr_credentials"
+    validate_status "debug: edburns: az acr show -n $acrName --query 'loginServer' -o tsv"
     azureACRServer=$(az acr show -n $acrName --query 'loginServer' -o tsv)
+    if [ $? == 1 ]; then
+        echo_stderr "debug: edburns: previous command failed. Waiting and retrying."
+        sleep 2m 30s
+        azureACRServer=$(az acr show -n $acrName --query 'loginServer' -o tsv)
+        if [ $? == 1 ]; then
+            echo_stderr "debug: edburns: previous command failed. Waiting and retrying."
+            sleep 2m 30s
+            azureACRServer=$(az acr show -n $acrName --query 'loginServer' -o tsv)
+            if [ $? == 1 ]; then
+                echo_stderr "debug: edburns: previous command failed. Waiting and retrying."
+                sleep 2m 30s
+            fi
+        fi
+    fi
+
     validate_status ${azureACRServer}
+
+    echo_stderr "az acr credential show -n $acrName --query 'username' -o tsv)"
     azureACRUserName=$(az acr credential show -n $acrName --query 'username' -o tsv)
+
+    if [ $? == 1 ]; then
+        echo_stderr "debug: edburns: previous command failed. Waiting and retrying."
+        sleep 2m 30s
+        azureACRUserName=$(az acr credential show -n $acrName --query 'username' -o tsv)
+        if [ $? == 1 ]; then
+            echo_stderr "debug: edburns: previous command failed. Waiting and retrying."
+            sleep 2m 30s
+        fi
+    fi
+    
     azureACRPassword=$(az acr credential show -n $acrName --query 'passwords[0].value' -o tsv)
     validate_status "Query ACR credentials."
 }
